@@ -1,0 +1,43 @@
+npx prisma migrate dev
+vercel dev
+
+
+
+
+
+REVIEWS OVERVIEW CARD MAKE TO COMPONENTS (OR MAYBE NOT BEC THEY HAVE SOME DIFFERENCE)
+
+
+
+
+
+Add check to route(front end), transport type must exist to add review to route  ??
+
+
+color scheme in front end
+
+UseDebounce Search
+
+
+
+
+
+simplify getUserById later
+
+remove top bar
+
+Add error handling to fetch detail review
+
+change transform types if have time
+
+upload review route name upper/lower case may have error
+
+
+location type move later
+
+
+SOLVED:
+-solve the count problem in summary page reviews section
+test token is valid? when login
+redux
+review up/downvote show retract or not

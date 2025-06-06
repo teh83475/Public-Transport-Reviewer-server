@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//maybe add updated/downvoted review & comment here
+model User {
+  uuid             String    @id @default(uuid())
+  username         String    @unique
+  password         String
+  reviews          Review[]  @relation("postedReview")
+  upvotedReviews   Review[]  @relation("upvotedReview")
+  downvotedReviews Review[]  @relation("downvotedReview")
+  comments         Comment[]
+}
+
+model Review {
+  id               Int           @id @default(autoincrement())
+  poster           User?         @relation("postedReview", fields: [posterId], references: [uuid])
+  posterId         String?
+  type             TransportType @default(OTHER)
+  route            Route?        @relation(fields: [routeId], references: [id])
+  routeId          Int?
+  registrationMark String?       @default("")
+  driverIdentity   String?       @default("")
+  title            String
+  rating           Int
+  content          String
+  upvotedBy        User[]        @relation("upvotedReview")
+  downvotedBy      User[]        @relation("downvotedReview")
+  postedAt         DateTime      @default(now())
+  comments         Comment[]
+  images           String[]
+  locations        Location[]
+}
+
+model Comment {
+  id       Int      @id @default(autoincrement())
+  poster   User?    @relation(fields: [posterId], references: [uuid])
+  posterId String?
+  Review   Review?  @relation(fields: [reviewId], references: [id])
+  reviewId Int?
+  content  String
+  postedAt DateTime @default(now())
+}
+
+model ExpiredToken {
+  id    Int    @id @default(autoincrement())
+  token String
+}
+
+model Route {
+  id         Int           @id @default(autoincrement())
+  type_route String        @unique
+  type       TransportType @default(OTHER)
+  name       String
+  summary    String        @default("")
+  reviews    Review[]
+}
+
+model Location {
+  id               Int      @id @default(autoincrement())
+  Review           Review?  @relation(fields: [reviewId], references: [id])
+  reviewId         Int?
+  latitude         Float
+  longitude        Float
+  altitude         Float?
+  accuracy         Float?
+  altitudeAccuracy Float?
+  heading          Float?
+  speed            Float?
+  timestamp        Float?
+  mocked           Boolean?
+  error            String?
+}
+
+enum TransportType {
+  BUS
+  MINIBUS
+  TRAIN
+  TAXI
+  OTHER
+}
